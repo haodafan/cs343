@@ -1,53 +1,79 @@
+OPT:= -multi # -O2
+PIMPL:=CFOR
+BIMPL:=NOBUSY
 TYPE:=int
+SENTINEL:=-1
 
 CXX = u++					# compiler
-CXXFLAGS = -g -Wall -Wextra -MMD -DTYPE="${TYPE}"
+CXXFLAGS = -g ${OPT} -Wall -Wextra -MMD -D"${PIMPL}" -D"${BIMPL}" \
+		   -DTYPE="${TYPE}" -DSENTINEL="${SENTINEL}" # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-## NOTE: q1binsertsort.h must *NOT* be compiled, so don't put it in the list of objects!
-OBJECTS1 = # object files forming 1st executable with prefix "q1"
-EXEC1 = binsertsort
+OBJECTS1 = # object files forming 1st executable with prefix "q2"
+EXEC1 = polymult				# 1st executable name
 
-OBJECTS2 = # object files forming 2st executable with prefix "q2"
-EXEC2 = cardgame
+OBJECTS2 = # object files forming 2nd executable with prefix "q3"
+EXEC2 = buffer					# 2nd executable name
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2}		# all object files
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 EXECS = ${EXEC1} ${EXEC2}			# all executables
 
+#############################################################
+
 .PHONY : all clean
 
 all : ${EXECS}					# build all executables
 
-#############################################################
+-include PolyImpl
 
--include ImplType
-
-ifeq (${IMPLTYPE},${TYPE})			# same implementation type as last time ?
+ifeq (${POLYIMPL},${PIMPL})			# same implementation type as last time ?
 ${EXEC1} : ${OBJECTS1}
 	${CXX} ${CXXFLAGS} $^ -o $@
 else
-ifeq (${TYPE},)					# no implementation type specified ?
+ifeq (${PIMPL},)				# no implementation type specified ?
 # set type to previous type
-TYPE=${IMPLTYPE}
+PIMPL=${POLYIMPL}
 ${EXEC1} : ${OBJECTS1}
 	${CXX} ${CXXFLAGS} $^ -o $@
 else						# implementation type has changed
 .PHONY : ${EXEC1}
 ${EXEC1} :
-	rm -f ImplType
-	touch q1binsertsort.h
+	rm -f PolyImpl
+	touch q2polymult.h
 	sleep 1
-	${MAKE} ${EXEC1} TYPE="${TYPE}"
+	${MAKE} ${EXEC1} PIMPL=${PIMPL}
 endif
 endif
 
-ImplType :
-	echo "IMPLTYPE=${TYPE}" > ImplType
+PolyImpl :
+	echo "POLYIMPL=${PIMPL}" > PolyImpl
 	sleep 1
 
-${EXEC2} : ${OBJECTS2}				# link step 2nd executable
+-include BufImpl
+
+ifeq (${BUFIMPL},${BIMPL})			# same implementation type as last time ?
+${EXEC2} : ${OBJECTS2}
 	${CXX} ${CXXFLAGS} $^ -o $@
+else
+ifeq (${BIMPL},)				# no implementation type specified ?
+# set type to previous type
+BIMPL=${BUFIMPL}
+${EXEC2} : ${OBJECTS2}
+	${CXX} ${CXXFLAGS} $^ -o $@
+else						# implementation type has changed
+.PHONY : ${EXEC2}
+${EXEC2} :
+	rm -f BufImpl
+	touch q3buffer.h
+	sleep 1
+	${MAKE} ${EXEC2} BIMPL="${BIMPL}"
+endif
+endif
+
+BufImpl :
+	echo "BUFIMPL=${BIMPL}" > BufImpl
+	sleep 1
 
 #############################################################
 
@@ -56,4 +82,4 @@ ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 -include ${DEPENDS}				# include *.d files containing program dependences
 
 clean :						# remove files that can be regenerated
-	rm -f *.d *.o ${EXECS} ImplType
+	rm -f *.d *.o ${EXECS} PolyImpl BufImpl
