@@ -1,0 +1,53 @@
+-- (a) --
+
+Program in figure 2 with no `-multi` flag and no optimization 
+
+shared:407087321
+shared:419750631
+shared:425240387
+shared:397015126
+shared:388565204
+shared:417274987
+shared:377575032
+shared:414913555
+shared:440288768
+shared:443517524
+
+Program in figure 2 with `-multi` flag and no optimization 
+
+shared:343407404
+shared:325538848
+shared:346607336
+shared:310504425
+shared:328652454
+shared:303484727
+shared:318363772
+shared:325438497
+shared:305954217
+shared:335760202
+
+-- (b) -- 
+
+No, because the scheduler essentially works at random (it's not actually random but there's so many variables in the environment to consider that it might as well be), so the number of times a the shared variable is successfully (or unsuccessfully) overwritten varies. 
+
+-- (c) --
+
+The minimum for an input of 100000000 is -3. There is only one case where this may happen. Let's assume we have thread A and thread B. 
+Thread A runs first and gets to the line `shared += 1` right after the store instruction. A has now stored the value -6. 
+Thread A is then pre-empted.
+Thread B then runs through all 100000000 iterations until `shared += 1` right before it reads the shared variable. 
+Thread B is then pre-empted. 
+Thread A then follows through with the rest of its instructions, which means the shared variable now has a value of -5. 
+Thread A is then pre-empted. 
+Thread B comes back and gets to the line `shared += 2` right after the store instruction. B now has stored the value -5.
+Thread B is then pre-empted. 
+Thread A then runs through all 100000000 iterations until `shared += 2` right before it reads the shared variable. 
+Thread A is then pre-empted. 
+Thread B comes back and finishes the rest of its instructions, which means the shared variable now has a value of -3. 
+Thus, the two threads can finish with a shared variable of -3. 
+
+The maximum for an input of 100000000 is 299999994+300000000 = 599999994 if we assume the threads never interfere with each other when adding to the shared variable. 
+
+-- (d) -- 
+
+Increasing the number of processors (using multi) gives more oppertunity for the shared variable to be overwritten. Thus, the values are generally smaller. 

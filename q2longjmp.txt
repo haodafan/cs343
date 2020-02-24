@@ -1,0 +1,22 @@
+=========== (b) ===========
+(i) 
+Throw catch statements automatically call the destructors of any objects created in the function that's throwing if the function exits. Longjmp does no such thing. 
+
+(ii)
+originalq2 11 11 103 13 output, no optimizations
+10.18u 0.00s 0:10.18
+
+longjmp 11 11 103 13 output, no optimizations
+3.71u 0.00s 0:03.71
+
+originalq2 11 11 103 13 output, optimizations
+11.49u 0.00s 0:11.51
+
+longjmp 11 11 103 13 output, optimizations
+2.78u 0.00s 0:02.79
+
+(iii) 
+There is a large performance difference between the original try/catch program and setjmp/longjmp program. The cause is likely due to the large amount of overhead and processes which try/catch statements run (e.g. they need to call destructors). 
+
+(iv) 
+There is also a large performance difference for the optimized programs. 

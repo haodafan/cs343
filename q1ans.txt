@@ -1,0 +1,56 @@
+	
+original: 
+	3.86u 0.00s 0:03.87
+
+i) returnglobal:
+	3.44u 0.01s 0:03.46 -- using the global flag method is faster. This is because the simple logic of checking a certain flag is less resource intensive than using try-catch blocks. 
+
+ii) returntype:
+	12.37u 0.00s 0:12.38 -- using the C++17 variant return-type is much slower. This is likely because using variants and type converting and type checking may be inefficient. 
+
+iii) returntypec:
+	5.71u 0.00s 0:05.73 -- using a tagged union is a bit slower. This is likely because we need to create and allocate memory for a new struct each time the function is called. 
+
+======================================
+
+original: 
+	3.12u 0.00s 0:03.13
+
+i) returnglobal-opt: 
+	3.26u 0.00s 0:03.26 -- using global flag method with compiler optimizations is around the same speed. 
+
+ii) returntype-opt:
+	3.44u 0.00s 0:03.44 -- same speed 
+
+iii) returntypec-opt: 
+	4.17u 0.00s 0:04.17 -- bit slower
+
+=======================================
+================ (c) ==================
+=======================================
+
+original: 
+	3.55u 0.00s 0:03.56 (1000)
+	8.92u 0.00s 0:08.94 (100)
+	14.68u 0.00s 0:14.69 (50)
+
+returnglobal-opt: 
+	3.19u 0.00s 0:03.20 (1000)
+	3.39u 0.00s 0:03.40 (100)
+	3.29u 0.00s 0:03.29 (50)
+	
+	Much faster for smaller error periods. Likely due to the expensive nature of exception handling in C++
+
+returntype-opt: 
+	3.42u 0.00s 0:03.43 (1000)
+	3.43u 0.00s 0:03.43 (100)
+	3.62u 0.00s 0:03.62 (50)
+
+	Much faster for smaller error periods. Likely due to the expensive nature of exception handling in C++
+
+returntypec-opt:
+	4.16u 0.00s 0:04.16 (1000)
+	4.46u 0.00s 0:04.46 (100)
+	4.47u 0.00s 0:04.47 (50) 
+
+	Much faster for smaller error periods. Likely due to the expensive nature of exception handling in C++
