@@ -65,14 +65,14 @@ void polymultiply( const poly_t & a, const poly_t & b, poly_t & c, const size_t 
 
     uActorStart();					// start actor system
 	Multiply* a_mult[delta];
-	for (int i = 0; i < delta; i++) a_mult[i] = new Multiply(i);
+	for (int i = 0; i < (int) delta; i++) a_mult[i] = new Multiply(i);
 	//try 
 	//{
 		int offset = 0;
 		// a non-flag way to break from both loops
 		while (true)
 		{
-			for (int i = 0; i < delta; i++)
+			for (int i = 0; i < (int) delta; i++)
 			{
 				if (i + offset >= c.size)
 					break; // exit calculations 
@@ -88,7 +88,7 @@ void polymultiply( const poly_t & a, const poly_t & b, poly_t & c, const size_t 
 	//}
 	//catch (...) 
 	//{
-		for (int i = 0; i < delta; i++)
+		for (int i = 0; i < (int) delta; i++)
 			*a_mult[i] | uActor::stopMsg;
 	//} 
     uActorStop();
@@ -99,12 +99,22 @@ void polymultiply( const poly_t & a, const poly_t & b, poly_t & c, const size_t 
 		poly_t a, b, c; 
 		size_t startIndex, endIndex, delta;
 
+		Multiply * t_child1; 
+		Multiply * t_child2; 
+
 		void main()
 		{
+			// Create task tree
+			if (startIndex*2 + 1 < delta)
+				t_child1 = new Multiply(a,b,c, startIndex*2 + 1, endIndex, delta);
+			if (startIndex*2 + 2 < delta)
+				t_child2 = new Multiply(a,b,c, startIndex*2 + 2, endIndex, delta);
+
+			// Main task 
 			int i = startIndex; 
 			while (true)
 			{
-				if (i >= endIndex)
+				if (i >= (int) endIndex)
 					break; // we reached the end of this task's loop
 				
 				// calculation
@@ -117,26 +127,33 @@ void polymultiply( const poly_t & a, const poly_t & b, poly_t & c, const size_t 
 
 				i += delta; 
 			}
+
+			// deletion 
+			if (startIndex*2 + 1 < delta)
+				delete t_child1;
+
+			if (startIndex*2 + 2 < delta)
+				delete t_child2;
 		}
 
       public:
-	Multiply( const poly_t & a, const poly_t & b, poly_t & c,  
-		  size_t startIndex, size_t endIndex, const size_t delta ) : 
-		  a(a), b(b), c(c), startIndex(startIndex), endIndex(endIndex), delta(delta) {} 
+		Multiply( const poly_t & a, const poly_t & b, poly_t & c,  
+			size_t startIndex, size_t endIndex, const size_t delta ) : 
+			a(a), b(b), c(c), startIndex(startIndex), endIndex(endIndex), delta(delta) {} 
 
     };
 
     // fill in
 	
-	Multiply * t_mults[delta]; 
-	for (int i = 0; i < delta; i++)
-	{
-		t_mults[i] = new Multiply(a,b,c,i,c.size,delta);
-	}
-	for (int i = 0; i < delta; i++) // wait for tasks to finish
-	{
-		delete t_mults[i];
-	}
+	Multiply * t_mults; 
+	//for (int i = 0; i < (int) delta; i++)
+	//{
+		t_mults = new Multiply(a,b,c,0,c.size,delta);
+	//}
+	//for (int i = 0; i < (int) delta; i++) // wait for tasks to finish
+	//{
+		delete t_mults;
+	//}
 
 #else
     #error invalid kind of concurrency system
@@ -176,11 +193,14 @@ int main( int argc , char * argv[] )
 			argIndex += 1; // next argument
 			processors = atoi( argv[argIndex] ); 
 
-			if (processors > 1)
-				uProcessor p[processors - 1];
+			//if (processors > 1)
+			//	uProcessor p[processors - 1];
 
 			argIndex += 1; // next argument
 		}
+
+		// multiple processors? 
+		uProcessor p[processors - 1];
 
 		poly_t a; 
 		poly_t b;

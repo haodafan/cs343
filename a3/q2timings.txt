@@ -1,0 +1,115 @@
+TIMING TEST RESULTS 
+(a) 
+
+--- TASK ---
+
+-p 1
+33.04u 0.21s 0:33.26r 107776kb
+
+-p 2
+32.38u 0.30s 0:16.38r 107908kb
+
+-p 4
+34.30u 0.14s 0:08.69r 108980kb
+
+-p 8 
+36.89u 0.24s 0:04.72r 111136kb
+
+-p 16
+35.49u 0.19s 0:02.28r 115136kb
+
+--- ACTOR --- 
+
+-p 1
+40.97u 0.10s 0:40.96r 29224kb
+
+-p 2
+40.92u 0.11s 0:20.47r 27884kb
+
+-p 4
+42.28u 0.07s 0:10.58r 28900kb
+
+-p 8
+45.71u 0.09s 0:05.76r 32136kb
+
+-p 16
+54.47u 0.10s 0:03.49r 37080kb
+
+--- CFOR ---
+
+-p 1
+44.89u 0.10s 0:45.02r 8640kb
+
+-p 2
+43.70u 0.08s 0:21.92r 8424kb
+
+-p 4
+45.15u 0.04s 0:11.34r 10684kb
+
+-p 8
+48.24u 0.06s 0:06.14r 13764kb
+
+-p 16
+48.24u 0.08s 0:03.12r 19704kb
+
+ii) Generally, as the number of processors double, the real processing time of the program halves 
+
+iii) CFOR is a little slower than ACTOR, which is a little bit slower than TASK 
+
+(b)
+
+--- CFOR --- 
+
+-p 1 
+53.98u 0.25s 0:54.02r 9344kb
+
+-p 2
+56.44u 0.17s 0:28.38r 10372kb
+
+-p 4
+54.90u 0.05s 0:13.82r 11476kb
+
+-p 8
+55.91u 0.10s 0:07.12r 14464kb
+
+-p 16
+59.60u 0.09s 0:03.83r 20372kb
+
+--- ACTOR ---
+
+-p 1
+50.67u 0.18s 0:50.89r 50336kb
+
+-p 2
+52.34u 0.15s 0:26.25r 44120kb
+
+-p 4
+53.54u 0.16s 0:13.43r 44976kb
+
+-p 8
+53.56u 0.20s 0:06.72r 48288kb
+
+-p 16
+59.05u 0.20s 0:03.75r 53148kb
+
+--- TASK --- 
+
+-p 1 
+49.22u 0.30s 0:49.38r 149672kb
+
+-p 2
+51.62u 0.30s 0:26.18r 150768kb
+
+-p 4
+51.84u 0.39s 0:13.07r 151476kb
+
+-p 8
+52.73u 0.31s 0:06.67r 153496kb
+ 
+-p 16
+54.06u 0.37s 0:03.44r 157824kb
+
+ii) Generally, as the number of processors double, the real processing time of the program halves 
+
+iii) TASK has a slightly faster time for one processor, but other than that there is little difference
+
