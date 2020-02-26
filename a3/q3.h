@@ -27,6 +27,7 @@ template<typename T> class BoundedBuffer {
     //uCondLock * bargeProdlock; 
     //uCondLock * bargeConslock; 
     bool signal_is_occuring = false;
+    //bool signal_is_occuring_cons = false;
   #endif 
 
   public:
@@ -57,7 +58,7 @@ template<typename T> class BoundedBuffer {
 template <typename T>
 void BoundedBuffer<T>::insert(T elem)
 {
-  std::cout << "INSERTING: " << elem << std::endl; // DEBUGGING
+  //std::cout << "INSERTING: " << elem << std::endl; // DEBUGGING
   // Perform assert 
   owner->acquire(); 
   while (num >= size)
@@ -65,16 +66,14 @@ void BoundedBuffer<T>::insert(T elem)
     // Busy wait
     prodlock->wait(*owner);
   }
-  owner->release(); 
 
   // actual insertion 
-  owner->acquire();
   buffer[prod_i] = elem; 
   num++; 
   inc_i(prod_i);
 
   // signal
-  if (num == 1)
+  //if (num == 1)
     conslock->broadcast(); 
 
   owner->release(); 
@@ -83,7 +82,7 @@ void BoundedBuffer<T>::insert(T elem)
 template <typename T>
 T BoundedBuffer<T>::remove()
 {
-  std::cout << "ATTEMPT REMOVE INDEX " << num << std::endl; // DEBUGGING
+  //std::cout << "ATTEMPT REMOVE INDEX " << num << std::endl; // DEBUGGING
 
   // perform assert
   owner->acquire(); 
@@ -93,7 +92,7 @@ T BoundedBuffer<T>::remove()
     conslock->wait(*owner);
   }
   
-  std::cout << "SUCCESSFUL REMOVE INDEX " << num << std::endl; // DEBUGGING
+  //std::cout << "SUCCESSFUL REMOVE INDEX " << num << std::endl; // DEBUGGING
 
   // get remove value
   int val = buffer[cons_i];
@@ -103,7 +102,7 @@ T BoundedBuffer<T>::remove()
   inc_i(cons_i);
 
   // signal
-  if (num == size - 1)
+  //if (num == size - 1)
     prodlock->broadcast(); 
 
   owner->release();
@@ -133,10 +132,8 @@ void BoundedBuffer<T>::insert(T elem)
     prodlock->wait(*owner);
     signal_is_occuring = false;
   }
-  owner->release(); 
 
   // actual insertion 
-  owner->acquire();
   buffer[prod_i] = elem; 
   num++; 
   inc_i(prod_i);
@@ -144,6 +141,7 @@ void BoundedBuffer<T>::insert(T elem)
   // signal
   if (!conslock->empty())
   {
+    //std::cout << "signalling conslock" << std::endl;
     signal_is_occuring = true;
     conslock->signal(); 
   }
@@ -155,18 +153,21 @@ void BoundedBuffer<T>::insert(T elem)
 template <typename T>
 T BoundedBuffer<T>::remove()
 {
+
   // perform assert
   owner->acquire(); 
 
   // check for barging 
   if (signal_is_occuring)
   {
+    //std::cout << "attempted barging: " << cons_i << std::endl;
     conslock->wait(*owner); 
     signal_is_occuring = false;
   }
 
   if (num == 0)
   {
+    //std::cout << "empty wait: " << cons_i << std::endl;
     //nonbusy wait
     conslock->wait(*owner);
     signal_is_occuring = false;
@@ -175,11 +176,12 @@ T BoundedBuffer<T>::remove()
   // get remove value
   int val = buffer[cons_i];
 
+  //std::cout << "successful removal: " << cons_i << std::endl;
   // actual removal 
   num--; 
   inc_i(cons_i);
 
-  if (prodlock->empty() == false)
+  if (!prodlock->empty())
   {
     signal_is_occuring = true;
     // signal
@@ -234,7 +236,7 @@ _Task Consumer {
         //std::cout << "Result: " << result << " Sentinel: " << Sentinel << std::endl; // debugging
         if (result == Sentinel)
           return;
-
+        
         sum += result; 
       }
     }

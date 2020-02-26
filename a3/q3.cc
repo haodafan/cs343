@@ -35,7 +35,12 @@ int main( int argc, char * argv[] )
         exit( 1 );
     } // try
     if (delay == -1)
-        delay = num_cons + num_prods; 
+        delay = num_cons + num_prods;
+
+    // Processors_
+    #ifdef __U_MULTI__
+    uProcessor p[3] __attribute__(( unused )); // create 3 kernel thread for a total of 4
+    #endif // __U_MULTI__
 
     // Create things
     BoundedBuffer<int> buffy = BoundedBuffer<int>(size);

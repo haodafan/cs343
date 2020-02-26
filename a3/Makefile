@@ -1,4 +1,4 @@
-OPT:= -multi #-O2 #
+OPT:= -O2 -Multi -nodebug
 PIMPL:=CFOR
 BIMPL:=NOBUSY
 TYPE:=int
