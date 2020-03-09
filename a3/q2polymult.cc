@@ -274,6 +274,9 @@ int main( int argc , char * argv[] )
 		delete [] a.coeffs; 
 		delete [] b.coeffs; 
 		delete [] c.coeffs;
+
+		delete file_A;
+		delete file_B;
 	}
 	catch (...)
 	{

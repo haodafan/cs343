@@ -1,6 +1,6 @@
-OPT:= -O2 -Multi -nodebug
+OPT:= -O2 -multi 
 PIMPL:=CFOR
-BIMPL:=NOBUSY
+BIMPL:=BUSY
 TYPE:=int
 SENTINEL:=-1
 

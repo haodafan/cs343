@@ -1,0 +1,49 @@
+q3 (a) (iii)
+Briefly explain why it is impossible to solve this problem using barging prevention
+
+Barging prevention is holding a lock between releasing and unblocking task. 
+
+A solution using barging prevention is impossible because our Sentinel inserts happen after all Producers are done inserting. Thus, they will always need to barge through the (potentially empty) wait queue after the initial locks have been acquired. 
+
+
+(b)
+(i)
+
+BUSY , (uni)
+3.41u 0.04s 0:04.77
+
+NOBUSY, (uni)
+2.51u 0.02s 0:02.54
+
+BUSY , (uni) , -O2
+3.23u 0.03s 0:04.62
+
+NOBUSY , (uni) , -O2
+2.15u 0.02s 0:02.17
+
+
+(ii)
+With or without optimizations, it seems like while running on a single processor, busy  waiting execution is slightly slower than nonbusy waiting execution. 
+
+(iii)
+
+BUSY , -multi 
+60.12u 0.16s 0:15.10
+
+NOBUSY , -multi
+64.28u 0.12s 0:16.10
+
+BUSY , - multi , -O2
+57.79u 0.13s 0:14.53
+
+NOBUSY , - multi , -O2
+63.75u 0.12s 0:15.98
+
+(iv) 
+With or without optimizations, while running on multiple processors, busy waiting seems to be slightly more efficient than nonbusy waiting. 
+
+(v)
+The performance difference between busy and nonbusy execution could be caused by the number of times the thread is asked to "wait". In multi threads, barging is more likely due to the fact that multiple threads are executing concurrently (especially in the beginning, when the wait queue is empty). Meanwhile in on a uniprocessor, since barging is less likely, threads are likely asked to wait more often in the BUSY waiting since (broadcasted) ready threads can be stuck in the busy waiting loop. 
+
+(vi) 
+In general, it takes significantly longer (in user time) to run the code. In my opinion, this is likely due to the fact that many threads can execute in parallel, a lot more time must be spent waiting to acquire the owner lock (since the owner lock enforces mutual exclusion, meaning only one thread can execute it at once). In a multi-processor environment, while the critical section is running, all other threads are locked out of it and cannot switch into it. Whereas in a uni processor, only one thread runs at a time, so if a context switch occurs in the lock, it is more likely to switch back into the context with the lock (since its in the ready queue). 

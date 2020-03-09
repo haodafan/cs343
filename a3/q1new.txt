@@ -1,0 +1,58 @@
+(a)
+
+---- ONE TASK ----
+-DARRAY
+0.87u 0.00s 0:00.87
+
+-VECTOR1
+1.40u 0.00s 0:01.40
+
+-VECTOR2 
+5.97u 0.00s 0:05.96
+
+-STACK
+0.54u 0.00s 0:00.54
+
+---- TWO TASKS ----
+-DARRAY
+9.46u 0.03s 0:04.84
+
+-VECTOR1
+9.12u 0.01s 0:04.63
+
+-VECTOR2 
+59.79u 0.08s 0:29.95
+
+-STACK
+1.18u 0.00s 0:00.59
+
+---- FOUR TASKS ----
+-DARRAY 
+43.69u 0.04s 0:11.30
+
+-VECTOR1
+43.98u 0.08s 0:11.27
+
+-VECTOR2
+404.47u 0.60s 1:42.11
+
+-STACK
+2.36u 0.00s 0:00.59
+
+(b)
+
+An increase in the number of tasks results in a significant increase in 
+both user and real time among runs. 
+
+User time seems to scale exponentially by 10 each time the number of tasks doubles. 
+
+Real time seems to scale by 4 times each time the number of tasks double.
+
+(c)
+
+The first two (DARRAY and VECTOR1) versions of the program use a statically sized data structure, one on the heap and the other on the stack. 
+Their runtimes are very similar. Arrays are more efficient than vectors while stack allocation (done for the vector) is more efficient than heap allocation (done for the array). These factors likely equalize to make for similar runtimes. 
+
+The third version of the program (VECTOR2) uses a dynamically-sized data structure, and takes by far the longest out of the four. This is likely due to the expensive nature of re-sizing and re-allocating memory for larger amounts of data. 
+
+The fourth version of the program (STACK) uses an efficient array data structure allocated completely on the stack. This has by far the fastest runtime, because it uses the most efficient data structure with the most efficient allocation. 

@@ -1,4 +1,4 @@
-#include "q3.h"
+#include "q3buffer.h"
 #include <iostream> 
 
 using namespace std;
