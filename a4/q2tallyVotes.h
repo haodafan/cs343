@@ -34,6 +34,7 @@ _Cormonitor TallyVotes : public uBarrier {
     unsigned int votesG = 0; 
     unsigned int voterCount = 0;
     unsigned int currgroup = 0
+    bool qfail = false; // flag variable - is that allowed? 
   public:                            // common interface
     _Event Failed {};
     TallyVotes( unsigned int voters, unsigned int group, Printer & printer )

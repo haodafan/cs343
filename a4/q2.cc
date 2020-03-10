@@ -96,6 +96,7 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
     }// try 
     catch (Failed f) // Quorum Failure
     {
+        // If we have a quorum failure, notify everyone else of the failure
         tourLock.broadcast();
         throw f;
     }
