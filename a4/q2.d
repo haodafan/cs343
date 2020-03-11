@@ -10,4 +10,4 @@ q2.o: q2.cc /usr/local/u++-7.0.0/inc/uC++.h \
  /usr/local/u++-7.0.0/inc/uPIHeap.h /usr/local/u++-7.0.0/inc/uHeap.h \
  /usr/local/u++-7.0.0/inc/uBaseSelector.h \
  /usr/local/u++-7.0.0/inc/uLocalDebugger.h q2printer.h q2tallyVotes.h \
- MPRNG.h
+ MPRNG.h /usr/local/u++-7.0.0/inc/uSemaphore.h
