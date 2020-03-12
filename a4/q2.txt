@@ -1,0 +1,16 @@
+(b)
+(i)
+------ ONE PROCESSOR ------
+MC:  1.48u 0.03s 0:01.53r 32792kb
+SEM: 1.51u 0.04s 0:01.55r 32772kb
+BAR: 1.53u 0.05s 0:01.57r 32868kb
+
+------ TWO PROCESSORS ------
+
+MC:  53.12u 0.15s 0:26.65r 33036kb››
+SEM: 50.25u 0.14s 0:25.42r 33000kb
+BAR: 54.79u 0.15s 0:27.45r 33852kb
+
+(ii)
+DIFFERENCE: 
+For all three implementations, the program is much much slower running on two processors when compared to one. 

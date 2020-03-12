@@ -1,0 +1,36 @@
+(a)
+-DINTERNAL 
+2.99u 0.76s 0:03.79
+-DEXTERNAL
+6.86u 0.73s 0:07.59
+-DINTERNAL -O2
+2.80u 0.76s 0:03.57
+-DEXTERNAL -O2
+4.68u 0.67s 0:05.36
+
+(b)
+It takes significantly more time to run the program with the EXTERNAL flag than with the INTERNAL flag. 
+
+The difference between the two is the buffering style (internal buffering vs external buffering). 
+The external buffer is slower because it is slower to constantly append onto a string (which may require memory reallocation) than it is to syscall output a number each time (which requires an integer to string conversion as well).
+
+(c)
+
+External buffering still takes more time, however it is more efficient than without compiler optimizations. There is not much of a difference between optimized and unoptimized internal buffering.
+
+(d)
+Performance difference using '\n' instead of endl
+
+-DINTERNAL
+1.98u 0.13s 0:02.14
+
+-DEXTERNAL 
+5.60u 0.14s 0:05.75
+
+-DINTERNAL -O2
+1.86u 0.13s 0:01.99
+
+-DEXTERNAL -O2
+3.57u 0.23s 0:03.81
+
+Marginally faster!
