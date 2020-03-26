@@ -7,8 +7,9 @@ _Monitor Printer {
 #else 
 _Cormonitor Printer {             // chose one of the two kinds of type constructor
 #endif
+    unsigned int voters; 
   public:
-    Printer( unsigned int voters );
+    Printer( unsigned int voters ) : voters(voters) {} 
     void print( unsigned int id, Voter::States state );
     void print( unsigned int id, Voter::States state, TallyVotes::Tour tour );
     void print( unsigned int id, Voter::States state, TallyVotes::Ballot ballot );
