@@ -67,7 +67,12 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
         _Accept( vote );
     }
 
-    // Quorum check
+    // Check quorum failure again 
+    if (voters < group)
+    {
+        // QUORUM FAILURE
+        throw Failed(); 
+    }
 
     // Go on tour!! :) 
     Tour savedtour;
@@ -103,6 +108,13 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
     if (count > 0)
     {
         _Accept( done ); // Wait until all of the current ones are done before proceeding 
+    }
+
+    // Check quorum failure again 
+    if (voters < group)
+    {
+        // QUORUM FAILURE
+        throw Failed(); 
     }
 
     return savedtour;
