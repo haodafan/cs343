@@ -80,12 +80,12 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
             else if (votesS > votesG && votesS > votesP) currtk = 's';
             else throw 1;
         }
-        catch (...) { cerr << "YOUR LOGIC BAD!!!!!!!" << endl; owner.V(); return t; }
+        catch (...) { cerr << "YOUR LOGIC BAD!!!!!!!" << endl; return savedtour; }
 
         // Voting result complete... 
         savedtour.tourkind = (TourKind) currtk;
         savedtour.groupno = groupid;
-        PRINT(id, Voter::Complete, t);
+        PRINT(id, Voter::Complete, savedtour);
 
         // Get rid of this round's results
         votesP = 0;
