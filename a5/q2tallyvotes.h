@@ -1,6 +1,10 @@
 #pragma once 
 
+#if defined( EXT ) || ( INT )
 _Monitor Printer;
+#else 
+_Cormonitor Printer;
+#endif 
 
 #if defined( EXT )                           // external scheduling monitor solution
 // includes for this kind of vote-tallier
