@@ -14,6 +14,16 @@ _Cormonitor Printer;
 extern MPRNG mprng;
 
 _Task Voter {
+
+    unsigned int id; 
+    unsigned int nvotes; 
+    TallyVotes & voteTallier; 
+    Printer & printer;
+
+    int seed; // for random number generator
+
+    void main();
+
     TallyVotes::Ballot cast() {              // cast 3-way vote
         // O(1) random selection of 3 items without replacement using divide and conquer.
         static const unsigned int voting[3][2][2] = { { {2,1}, {1,2} }, { {0,2}, {2,0} }, { {0,1}, {1,0} } };
