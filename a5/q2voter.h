@@ -33,5 +33,6 @@ _Task Voter {
   public:
     enum States { Start = 'S', Vote = 'V', Block = 'B', Unblock = 'U', Barging = 'b',
          Done = 'D', Complete = 'C', Going = 'G', Failed = 'X', Terminated = 'T' };
-    Voter( unsigned int id, unsigned int nvotes, TallyVotes & voteTallier, Printer & printer );
+    Voter( unsigned int id, unsigned int nvotes, TallyVotes & voteTallier, Printer & printer, int seed ) 
+        : id(id), nvotes(nvotes), voteTallier(voteTallier), printer(printer), seed(seed) {}
 };

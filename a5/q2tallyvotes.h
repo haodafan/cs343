@@ -54,7 +54,8 @@ _Task TallyVotes {
 
   public:                                    // common interface
     _Event Failed {};
-    TallyVotes( unsigned int voters, unsigned int group, Printer & printer );
+    TallyVotes( unsigned int voters, unsigned int group, Printer & printer )
+        : voters(voters), group(group), printer(printer) {}
     struct Ballot { unsigned int picture, statue, giftshop; };
     enum TourKind { Picture = 'p', Statue = 's', GiftShop = 'g' };
     struct Tour { TourKind tourkind; unsigned int groupno; };
