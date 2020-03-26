@@ -5,7 +5,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -multi -O2 -std=c++11 -Wall -Wextra -MMD -D${IMPL} -D${OUTPUT} # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS = q2voter.o q2tallyvotes.o q2.o # list of object files for question 1 prefixed with "q1"
+OBJECTS = q2voter.o q2tallyvotes.o q2printer.o q2.o # list of object files for question 1 prefixed with "q1"
 EXEC = vote
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
@@ -20,13 +20,13 @@ all : ${EXEC}					# build all executables
 
 ifeq (${LOCKIMPL},${IMPL})			# same implementation type as last time ?
 ${EXEC} : ${OBJECTS}
-	${CXX} ${CXXFLAGS} printer.o $^ -o $@
+	${CXX} ${CXXFLAGS} q2printer.o $^ -o $@
 else
 ifeq (${IMPL},)					# no implementation type specified ?
 # set type to previous type
 IMPL=${LOCKIMPL}
 ${EXEC} : ${OBJECTS}
-	${CXX} ${CXXFLAGS} printer.o $^ -o $@
+	${CXX} ${CXXFLAGS} q2printer.o $^ -o $@
 else						# implementation type has changed
 .PHONY : ${EXEC}
 ${EXEC} :
