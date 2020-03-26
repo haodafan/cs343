@@ -7,9 +7,14 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+#ifdef NOOUTPUT
+#define PRINT( args... ) 
+#else
+#define PRINT( args... ) printer.print( args )
+#endif // NOOUTPUT
 
-extern MPRNG mprng;
+using namespace std;
+MPRNG mprng;
 
 // Main function
 int main( int argc, char *argv[] ) {
@@ -19,15 +24,15 @@ int main( int argc, char *argv[] ) {
     int votes = 1; 
     int seed = getpid(); 
     int processors = 1;
+    
     //vote [ voters | ’d’ [ group | ’d’ [ votes | ’d’ [ seed | ’d’ [ processors | ’d’ ] ] ] ] ]
-
     try {
         switch ( argc ) {
-          case 6: processors = stoi( argv[5] ); if ( processors <= 0 ) throw 1;
-          case 5: seed = stoi( argv[4] ); if ( seed <= 0 ) throw 1;
-          case 4: votes = stoi( argv[3] ); if ( votes <= 0 ) throw 1;
-          case 3: group = stoi( argv[2] ); if ( group <= 0 ) throw 1;
-          case 2: voters = stoi( argv[1] ); if ( voters <= 0 ) throw 1;
+          case 6: processors = (*argv[5] == 'd') ? processors : stoi( argv[5] ); if ( processors <= 0 ) throw 1;
+          case 5: seed = (*argv[4] == 'd') ? seed : stoi( argv[4] ); if ( seed <= 0 ) throw 1;
+          case 4: votes = (*argv[3] == 'd') ? votes : stoi( argv[3] ); if ( votes <= 0 ) throw 1;
+          case 3: group = (*argv[2] == 'd') ? group : stoi( argv[2] ); if ( group <= 0 ) throw 1;
+          case 2: voters = (*argv[1] == 'd') ? voters : stoi( argv[1] ); if ( voters <= 0 ) throw 1;
           case 1: break;                                // use defaults
           default: throw 1;
         } // switch
