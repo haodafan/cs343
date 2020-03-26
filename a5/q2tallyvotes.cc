@@ -40,9 +40,9 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
     {
         barging++; 
         _Accept( done ); // When everyone is "done", then the next portion may continue 
-        PRINT(id, Voter::Barging, bargeLockCount);
+        PRINT(id, Voter::Barging, barging);
         
-        bargeLockCount--;
+        barging--;
     }
 
     // Check quorum failure again 
