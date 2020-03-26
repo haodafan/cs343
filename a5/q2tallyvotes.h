@@ -49,7 +49,8 @@ _Task TallyVotes {
     int votesP = 0; 
     int votesS = 0; 
     int votesG = 0; 
-    Tour t; 
+    unsigned int groupid = 0;
+    char currtk;
 
   public:                                    // common interface
     _Event Failed {};

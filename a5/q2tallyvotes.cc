@@ -74,25 +74,35 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
     if (count == group) // Only the first in tourlock decides the tour
     {
         try {
-            t.groupno = groupno;
             // Get Tour results, Default: G > P > S
-            if (votesG >= votesP && votesG >= votesS) t.tourkind = (TourKind) 'g';
-            else if (votesP > votesG && votesP >= votesS) t.tourkind = (TourKind) 'p';
-            else if (votesS > votesG && votesS > votesP) t.tourkind = (TourKind) 's';
+            if (votesG >= votesP && votesG >= votesS) currtk = 'g';
+            else if (votesP > votesG && votesP >= votesS) currtk = 'p';
+            else if (votesS > votesG && votesS > votesP) currtk = 's';
             else throw 1;
         }
         catch (...) { cerr << "YOUR LOGIC BAD!!!!!!!" << endl; owner.V(); return t; }
 
+        // Voting result complete... 
+        savedtour.tourkind = (TourKind) currtk;
+        savedtour.groupno = groupid;
         PRINT(id, Voter::Complete, t);
+
+        // Get rid of this round's results
+        votesP = 0;
+        votesG = 0;
+        votesS = 0; 
     }
+
+    // for those that missed it ... 
+    savedtour.tourkind = (TourKind) currtk;
+    savedtour.groupno = groupid;
 
     PRINT(id, Voter::Going, t);
 
-    savedtour = t; // save this information even after _Accept()
     count--;
     if (count > 0)
     {
-        _Accept( done );
+        _Accept( done ); // Wait until all of the current ones are done before proceeding 
     }
 
     return savedtour;
