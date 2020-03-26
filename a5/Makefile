@@ -31,7 +31,7 @@ else						# implementation type has changed
 .PHONY : ${EXEC}
 ${EXEC} :
 	rm -f LockImpl
-	touch q2tallyVotes.h
+	touch q2tallyvotes.h
 	sleep 1
 	${MAKE} ${EXEC} IMPL="${IMPL}"
 endif

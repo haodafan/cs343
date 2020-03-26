@@ -6,6 +6,7 @@
 _Monitor 
 #else 
 _Cormonitor Printer {             // chose one of the two kinds of type constructor
+#endif
   public:
     Printer( unsigned int voters );
     void print( unsigned int id, Voter::States state );
@@ -13,4 +14,3 @@ _Cormonitor Printer {             // chose one of the two kinds of type construc
     void print( unsigned int id, Voter::States state, TallyVotes::Ballot ballot );
     void print( unsigned int id, Voter::States state, unsigned int numBlocked );
 };
-#endif
