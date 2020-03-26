@@ -97,7 +97,7 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot )
     savedtour.tourkind = (TourKind) currtk;
     savedtour.groupno = groupid;
 
-    PRINT(id, Voter::Going, savedtour;
+    PRINT(id, Voter::Going, savedtour);
 
     count--;
     if (count > 0)
