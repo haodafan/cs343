@@ -5,7 +5,7 @@
 #include <string>
 
 //class TallyVotes;
-#if defined( EXT ) || ( INT )
+#if defined( EXT ) || defined( INT )
 _Monitor Printer;
 #else 
 _Cormonitor Printer;
