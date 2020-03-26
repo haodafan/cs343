@@ -3,7 +3,7 @@
 #include "q2tallyvotes.h"
 #include "q2voter.h"
 #if defined( EXT ) || defined( INT )
-_Monitor 
+_Monitor Printer { 
 #else 
 _Cormonitor Printer {             // chose one of the two kinds of type constructor
 #endif
