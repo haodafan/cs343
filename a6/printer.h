@@ -5,8 +5,17 @@ _Monitor Printer {
 	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Timer, Train, Conductor, TrainStop, Student, WATCardOfficeCourier };
 
   private:
-  	class PImpl;
-  	PImpl * pimpl;
+  	//class PImpl;
+  	//PImpl * pimpl;  
+
+	unsigned int nStudents; 
+	unsigned int nTrains; 
+	unsigned int nStops; 
+	unsigned int nCouriers; 
+
+	unsigned int nColumns;
+	string* columns;
+	string nullColumn;
 
   public:
 	Printer( unsigned int numStudents, unsigned int numTrains, unsigned int numStops, unsigned int numCouriers );
