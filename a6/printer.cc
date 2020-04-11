@@ -49,8 +49,6 @@ Printer::Printer( unsigned int numStudents, unsigned int numTrains, unsigned int
     columns = new Column[nColumns];
     setSpecial("");
 
-    cout << "space allocated!" << endl; //DEBUGGING
-
     // Create the title columns
     columns[0].special = "Parent";
     columns[1].special = "Gropoff";
@@ -73,7 +71,7 @@ Printer::Printer( unsigned int numStudents, unsigned int numTrains, unsigned int
     // Create the barriers
     setSpecial("*******");
     flush();
-    resetColumns();
+    resetColumns(); //useless
 } // Printer::Printer
 
 
@@ -103,8 +101,13 @@ bool Printer::flushable()
     for (unsigned int i = 0; i < nColumns; i++)
     {
         if (columns[i].state != '?')
+        {
+            cout << "flushable(): FLUSHABLE" << endl;
             return true;
+
+        }
     }
+    cout << "flushable(): NOT FLUSHABLE" << endl;
     return false;
 }
 
@@ -112,7 +115,7 @@ bool Printer::flushable()
 void Printer::flush()
 {
     // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
+    cout << "flush(): Current state of each of the " << nColumns << " columns: ";
     for (unsigned int i = 0; i < nColumns; i++)
         cout << columns[i].state;
 
@@ -142,42 +145,32 @@ void Printer::flush()
         cout << columns[i].state;
 
         // Output values 
-        if (columns[i].v1 != UINT_MAX) 
-        {
-            cout << columns[i].v1;
-            if (columns[i].v2 != UINT_MAX)
-            {
-                cout << "," << columns[i].v2;
-                if (columns[i].oid != UINT_MAX)
-                {
-                    cout << "," << columns[i].oid;
-                } //if 
-            } //if 
-        } //if 
+        if (columns[i].v1 != UINT_MAX) cout << columns[i].v1;
+        if (columns[i].v2 != UINT_MAX) cout << "," << columns[i].v2;
+        if (columns[i].oid != UINT_MAX) cout << "," << columns[i].oid;
 
         // Output character 
-        if (columns[i].c != '?') 
-            cout << columns[i].c;
+        if (columns[i].c != '?') cout << columns[i].c;
         
     } //for
     cout << endl; // Onto next column
 
-    cout << "flushed!" << endl; //DEBUGGING
+    cout << "flush(): flushed!" << endl; //DEBUGGING
     resetColumns();
 
 } // Printer::flush
 
 void Printer::resetColumns()
 {
-    cout << "columns reset!" << endl; //debugging
-
     // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
+    cout << "resetColumns(): Current state of each of the " << nColumns << " columns: ";
     for (unsigned int i = 0; i < nColumns; i++)
         cout << columns[i].state;
 
     cout << endl; 
     // END OF DEBUGGING
+
+    cout << "resetColumns(): columns reset!" << endl; //debugging
 
     for (unsigned int i = 0; i < nColumns; i++)
     {
@@ -190,7 +183,7 @@ void Printer::resetColumns()
     }
 
     // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
+    cout << "resetColumns() 2: Current state of each of the " << nColumns << " columns: ";
     for (unsigned int i = 0; i < nColumns; i++)
         cout << columns[i].state;
 
@@ -224,7 +217,7 @@ void Printer::setColumn( Kind kind, char state, unsigned int lid, unsigned int v
     cout << state << " " << lid << " " << value1 << " " << value2 << " " << c << " " << oid << endl; // DEBUGGING
 
     // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
+    cout << "setColumn(): Current state of each of the " << nColumns << " columns: ";
     for (unsigned int i = 0; i < nColumns; i++)
         cout << columns[i].state;
 
@@ -250,59 +243,70 @@ void Printer::setColumn( Kind kind, char state, unsigned int lid, unsigned int v
 
 // PUBLIC PRINTING FUNCTIONS -------------------------------------------------------------------------------
 void Printer::print( Kind kind, char state )
-{
+{   
+    cout << "print( kind, " << state << ");" << endl;
     setColumn(kind, state);
 } // Printer::print
 
 // Prints with number
 void Printer::print( Kind kind, char state, unsigned int value1 )
 {
+    cout << "print( kind, " << state << ", " << value1 << ");" << endl;
     setColumn(kind, state, 0, value1);
 } // Printer::print
 
 // Prints with two numbers
 void Printer::print( Kind kind, char state, unsigned int value1 , unsigned int value2 )
 {
+    cout << "print( kind, " << state << ", " << value1 <<  ", " << value2 << ");" << endl;
     setColumn(kind, state, 0, value1, value2);
 } // Printer::print
 
 // Basic, prints only state at a particular id
 void Printer::print( Kind kind, unsigned int lid, char state )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ");" << endl;
     setColumn(kind, state, lid);
 } // Printer::print
 
 // Prints with number at a particular id
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1 )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ", " << value1 <<  ");" <<  endl;
     setColumn(kind, state, lid, value1);
 } // Printer::print
 
 // Prints with two number at a particular id
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2 )
 {
+    
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ", " << value1 <<  ", " << value2 << ");" << endl;
     setColumn(kind, state, lid, value1, value2);
 } // Printer::print
 
 
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int oid, unsigned int value1, unsigned int value2 )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ", " << "oid = " << oid << ", "<< value1 <<  ", " << value2 << ");" << endl;
     setColumn(kind, state, lid, value1, value2, ' ', oid);
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state, char c )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid <<  ", c = " << c << ");" << endl;
     setColumn(kind, state, lid, UINT_MAX, UINT_MAX, c);
 } // Printer::print
 
 
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1, char c )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ", "<< value1 << ", c = " << c << ");" << endl;
     setColumn(kind, state, lid, value1, UINT_MAX, c);
 } // Printer::print
 
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2, char c )
 {
+    cout << "print( kind, " << state << ", " << "lid = " << lid << ", "<< value1 <<  ", " << value2 << ", c = " << c << ");" << endl;
     setColumn(kind, state, lid, value1, value2, c);
 } // Printer::print
 
