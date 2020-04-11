@@ -43,10 +43,10 @@ Printer::Printer( unsigned int numStudents, unsigned int numTrains, unsigned int
 
     // We need a column for: 
     // Parent, Groupoff, Watcard Office, Names, Timer, All trains, All Conductors (1 per train), All stops, All students, All Watcard Couriers 
-    nColumns = 5 + nTrains + nTrains + nStops + nStudents + nCouriers; 
+    nnnnnnColumns = 5 + nTrains + nTrains + nStops + nStudents + nCouriers; 
 
     // Allocate space for columns on heap
-    columns = new Column[nColumns];
+    columns = new Column[nnnnnnColumns];
     setSpecial("");
 
     // Create the title columns
@@ -88,7 +88,7 @@ Printer::~Printer() {
 // Sets all columns 
 void Printer::setSpecial(string value)
 {
-    for (unsigned int i = 0; i < nColumns; i++)
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
     {
         columns[i].special = value; 
         columns[i].state = '$';
@@ -98,7 +98,7 @@ void Printer::setSpecial(string value)
 // Checks if any columns are occupied
 bool Printer::flushable()
 {
-    for (unsigned int i = 0; i < nColumns; i++)
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
     {
         if (columns[i].state != '?')
         {
@@ -115,8 +115,8 @@ bool Printer::flushable()
 void Printer::flush()
 {
     // START OF DEBUGGING
-    cout << "flush(): Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
+    cout << "flush(): Current state of each of the " << nnnnnnColumns << " columns: ";
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
         cout << columns[i].state;
 
     cout << endl; 
@@ -124,7 +124,7 @@ void Printer::flush()
 
     if (!flushable()) return;
 
-    for (unsigned int i = 0; i < nColumns; i++)
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
     {
         // Empty case 
         if (columns[i].state == '?')
@@ -163,8 +163,8 @@ void Printer::flush()
 void Printer::resetColumns()
 {
     // START OF DEBUGGING
-    cout << "resetColumns(): Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
+    cout << "resetColumns(): Current state of each of the " << nnnnnnColumns << " columns: ";
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
         cout << columns[i].state;
 
     cout << endl; 
@@ -172,7 +172,7 @@ void Printer::resetColumns()
 
     cout << "resetColumns(): columns reset!" << endl; //debugging
 
-    for (unsigned int i = 0; i < nColumns; i++)
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
     {
         columns[i].state = '?'; // Note we have two special states: ? for empty, $ for special
 		columns[i].v1 = UINT_MAX; // first value (empty = UINT_MAX)
@@ -183,8 +183,8 @@ void Printer::resetColumns()
     }
 
     // START OF DEBUGGING
-    cout << "resetColumns() 2: Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
+    cout << "resetColumns() 2: Current state of each of the " << nnnnnnColumns << " columns: ";
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
         cout << columns[i].state;
 
     cout << endl; 
@@ -217,8 +217,8 @@ void Printer::setColumn( Kind kind, char state, unsigned int lid, unsigned int v
     cout << state << " " << lid << " " << value1 << " " << value2 << " " << c << " " << oid << endl; // DEBUGGING
 
     // START OF DEBUGGING
-    cout << "setColumn(): Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
+    cout << "setColumn(): Current state of each of the " << nnnnnnColumns << " columns: ";
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
         cout << columns[i].state;
 
     cout << endl; 
@@ -244,6 +244,14 @@ void Printer::setColumn( Kind kind, char state, unsigned int lid, unsigned int v
 // PUBLIC PRINTING FUNCTIONS -------------------------------------------------------------------------------
 void Printer::print( Kind kind, char state )
 {   
+    // START OF DEBUGGING
+    cout << "print(kind, state): Current state of each of the " << nnnnnnColumns << " columns: ";
+    for (unsigned int i = 0; i < nnnnnnColumns; i++)
+        cout << columns[i].state;
+
+    cout << endl; 
+    // END OF DEBUGGING
+
     cout << "print( kind, " << state << ");" << endl;
     setColumn(kind, state);
 } // Printer::print

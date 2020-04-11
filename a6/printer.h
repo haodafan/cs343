@@ -23,7 +23,7 @@ _Monitor Printer {
 	unsigned int nStops; 
 	unsigned int nCouriers; 
 
-	unsigned int nColumns;
+	unsigned int nnnnnnColumns;
 	Column* columns;
 
 	// private functions

@@ -1,4 +1,6 @@
+#include "config.h"
 #include <fstream>
+#include <sstream>
 
 void processConfigFile( const char * configFile, ConfigParms & cparms )
 {
@@ -24,35 +26,32 @@ void processConfigFile( const char * configFile, ConfigParms & cparms )
     std::ifstream file(configFile);
 
     std::string line;
-    while (std::getline(infile, line))
+    while (std::getline(file, line))
     {
         // get rid of comments 
-        bool comment == false;
-        for (int i = 0; i < line.size(); i++)
+        bool comment = false;
+        for (unsigned int i = 0; i < line.size(); i++)
         {
-            if (line[i] == "#") comment = true;
+            if (line[i] == '#') comment = true;
             if (comment) line[i] = ' ';
         }
 
         // Fill cparms
-        std::istringstream iss(line)
-        string variable;
+        std::istringstream iss(line);
+        std::string variable;
         unsigned int value; 
         iss >> variable >> value; 
 
-        switch (variable)
-        {
-            case "StopCost": cparms.stopCost = value; break;
-            case "NumStudents": cparms.numStudents = value; break;
-            case "NumStops": cparms.numStops = value; break;
-            case "MaxNumStudents": cparms.maxNumStudents = value; break;
-            case "TimerDelay": cparms.timerDelay = value; break;
-            case "MaxStudentDelay": cparms.maxStudentDelay = value; break;
-            case "MaxStudentTrips": cparms.maxStudentTrips = value; break;
-            case "GroupoffDelay": cparms.groupoffDelay = value; break;
-            case "ConductorDelay": cparms.conductorDelay = value; break;
-            case "ParentalDelay": cparms.parentalDelay = value; break;
-            case "NumCouriers": cparms.numCouriers = value; break;
-        }
+        if (variable == "StopCost") cparms.stopCost = value;
+        else if (variable == "NumStudents") cparms.numStudents = value;
+        else if (variable == "NumStops") cparms.numStops = value;
+        else if (variable == "MaxNumStudents") cparms.maxNumStudents = value;
+        else if (variable == "TimerDelay") cparms.timerDelay = value;
+        else if (variable == "MaxStudentDelay") cparms.maxStudentDelay = value;
+        else if (variable == "MaxStudentTrips") cparms.maxStudentTrips = value;
+        else if (variable == "GroupoffDelay") cparms.groupoffDelay = value;
+        else if (variable == "ConductorDelay") cparms.conductorDelay = value;
+        else if (variable == "ParentalDelay") cparms.parentalDelay = value;
+        else if (variable == "NumCouriers") cparms.numCouriers = value;
     }
 }
