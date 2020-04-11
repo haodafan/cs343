@@ -32,9 +32,6 @@ _Monitor Printer {
 
 Printer::Printer( unsigned int numStudents, unsigned int numTrains, unsigned int numStops, unsigned int numCouriers )
 {
-    // DEBUGGING
-    cout << "PRINTER CONSTRUCTION CALLED: " << numStudents << " " << numTrains << " " << numStops << " " << numCouriers << endl;
-
     // Store parameters 
     nStudents = numStudents; 
     nTrains = numTrains; 
@@ -47,33 +44,33 @@ Printer::Printer( unsigned int numStudents, unsigned int numTrains, unsigned int
 
     // Allocate space for columns on heap
     columns = new Column[nColumns];
-    setSpecial("");
+    initializeColumns("QQQ", true);
 
     cout << "space allocated!" << endl; //DEBUGGING
 
     // Create the title columns
-    columns[0].special = "Parent";
-    columns[1].special = "Gropoff";
-    columns[2].special = "WAToff";
-    columns[3].special = "Names";
-    columns[4].special = "Timer";
+    columns[0].output = "Parent";
+    columns[1].output = "Gropoff";
+    columns[2].output = "WAToff";
+    columns[3].output = "Names";
+    columns[4].output = "Timer";
     for (unsigned int i = 0; i < nTrains; i++)
-        columns[5 + i].special  = "Train" + to_string(i);
+        columns[5 + i].output  = "Train" + to_string(i);
     for (unsigned int i = 0; i < nTrains; i++)
-        columns[5 + nTrains + i].special  = "Cond" + to_string(i);
+        columns[5 + nTrains + i].output  = "Cond" + to_string(i);
     for (unsigned int i = 0; i < nStops; i++)
-        columns[5 + 2*nTrains + i].special  = "Stop" + to_string(i);
+        columns[5 + 2*nTrains + i].output  = "Stop" + to_string(i);
     for (unsigned int i = 0; i < nStudents; i++)
-        columns[5 + 2*nTrains + nStops + i].special  = "Stud" + to_string(i);
+        columns[5 + 2*nTrains + nStops + i].output  = "Stud" + to_string(i);
     for (unsigned int i = 0; i < nCouriers; i++)
-        columns[5 + 2*nTrains + nStops + nStudents + i].special  = "WCour" + to_string(i);
+        columns[5 + 2*nTrains + nStops + nStudents + i].output  = "WCour" + to_string(i);
 
     flush();
 
     // Create the barriers
-    setSpecial("*******");
+    initializeColumns("*******", true);
     flush();
-    resetColumns();
+    
 } // Printer::Printer
 
 
@@ -88,12 +85,12 @@ Printer::~Printer() {
 } // Printer::~Printer
 
 // Sets all columns 
-void Printer::setSpecial(string value)
+void Printer::initializeColumns(string value, bool occupied)
 {
     for (unsigned int i = 0; i < nColumns; i++)
     {
-        columns[i].special = value; 
-        columns[i].state = '$';
+        columns[i].output = value; 
+        columns[i].occupied = occupied;
     }
 }
 
@@ -102,7 +99,7 @@ bool Printer::flushable()
 {
     for (unsigned int i = 0; i < nColumns; i++)
     {
-        if (columns[i].state != '?')
+        if (columns[i].occupied == true)
             return true;
     }
     return false;
@@ -111,92 +108,28 @@ bool Printer::flushable()
 // Prints all columns to cout and removes occupied flag
 void Printer::flush()
 {
-    // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
-        cout << columns[i].state;
-
-    cout << endl; 
-    // END OF DEBUGGING
+    cout << "Flush called!" << nColumns << endl; // DEBUGGING
 
     if (!flushable()) return;
 
     for (unsigned int i = 0; i < nColumns; i++)
     {
-        // Empty case 
-        if (columns[i].state == '?')
+        if (!columns[i].occupied)
         {
             cout << "\t";
             continue;
-        }//if
+        } 
+        // Print to cout
+        cout << columns[i].output << "\t"; 
+    }
+    cout << endl;
 
-        // Special case
-        if (columns[i].state == '$')
-        {
-            // Special state
-            cout << columns[i].special << "\t";
-            continue;
-        }// if
-
-        // Output state 
-        cout << columns[i].state;
-
-        // Output values 
-        if (columns[i].v1 != UINT_MAX) 
-        {
-            cout << columns[i].v1;
-            if (columns[i].v2 != UINT_MAX)
-            {
-                cout << "," << columns[i].v2;
-                if (columns[i].oid != UINT_MAX)
-                {
-                    cout << "," << columns[i].oid;
-                } //if 
-            } //if 
-        } //if 
-
-        // Output character 
-        if (columns[i].c != '?') 
-            cout << columns[i].c;
-        
-    } //for
-    cout << endl; // Onto next column
+    // Reset columns, remove flag
+    initializeColumns("", false);
 
     cout << "flushed!" << endl; //DEBUGGING
-    resetColumns();
 
 } // Printer::flush
-
-void Printer::resetColumns()
-{
-    cout << "columns reset!" << endl; //debugging
-
-    // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
-        cout << columns[i].state;
-
-    cout << endl; 
-    // END OF DEBUGGING
-
-    for (unsigned int i = 0; i < nColumns; i++)
-    {
-        columns[i].state = '?'; // Note we have two special states: ? for empty, $ for special
-		columns[i].v1 = UINT_MAX; // first value (empty = UINT_MAX)
-		columns[i].v2 = UINT_MAX; // second value (empty = UINT_MAX)
-		columns[i].oid = UINT_MAX; // oid value (empty = UINT_MAX)
-		columns[i].c = '?'; // Character value (empty = '?')
-		columns[i].special = "n/a"; // Special printing values (like column titles)
-    }
-
-    // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
-        cout << columns[i].state;
-
-    cout << endl; 
-    // END OF DEBUGGING
-}
 
 // Calculates the index of the column based on its kind and id
 unsigned int Printer::calculateColumnNum(Kind kind, int id)
@@ -220,32 +153,45 @@ unsigned int Printer::calculateColumnNum(Kind kind, int id)
 // To omit values from the printer, assign default values to parameters
 void Printer::setColumn( Kind kind, char state, unsigned int lid, unsigned int value1, unsigned int value2, char c, unsigned int oid)
 {
-    cout << "Set column: " << calculateColumnNum(kind, lid) << " to "; // DEBUGGING
+    cout << calculateColumnNum(kind, lid); // DEBUGGING
     cout << state << " " << lid << " " << value1 << " " << value2 << " " << c << " " << oid << endl; // DEBUGGING
-
-    // START OF DEBUGGING
-    cout << "Current state of each of the " << nColumns << " columns: ";
-    for (unsigned int i = 0; i < nColumns; i++)
-        cout << columns[i].state;
-
-    cout << endl; 
-    // END OF DEBUGGING
 
     unsigned int colnum = calculateColumnNum(kind, lid);
 
-    if (columns[colnum].state != '?')
+    if (columns[colnum].occupied)
     {
-        cout << "EXISTING COLUMN DETECTED: \'" << columns[colnum].state << "\'" << endl; //DEBUGGING
+        cout << "EXISTING COLUMN DETECTED: \"" << columns[colnum].output << "\"" << endl; //DEBUGGING
         flush();
     }
 
-    // set column values
-    columns[colnum].state = state;
-    columns[colnum].v1 = value1;
-    columns[colnum].v2 = value2; 
-    columns[colnum].oid = oid;
-    columns[colnum].c = c;
+    columns[colnum].output.append(state, 1);
 
+    cout << "ADDED STATE" << endl;// DEBUGGING
+
+    // If there are inputted numbers... 
+    if (value1 != UINT_MAX)
+    {
+        columns[colnum].output += std::to_string(value1);
+
+        if (value2 != UINT_MAX)
+            columns[colnum].output += ',' + std::to_string(value2);
+        
+        if (oid != UINT_MAX)
+            columns[colnum].output += ',' + std::to_string(oid);
+    }
+
+    cout << "ADDED NUMBERS IF ANY" << endl;// DEBUGGING
+
+    // If there is an inputted final character
+    if (c != ' ')
+    {
+        columns[colnum].output += c;
+    }
+
+    cout << "ADDED CHARS IF ANY" << endl;// DEBUGGING
+
+    // Set flag
+    columns[colnum].occupied = true;
 } // Printer::setColumn
 
 // PUBLIC PRINTING FUNCTIONS -------------------------------------------------------------------------------
