@@ -1,7 +1,8 @@
 #include "groupoff.h"
 
 #include "MPRNG.h"
-#include <assert>
+#include <cassert>
+#include <iostream>
 
 
 MPRNG mprng;
@@ -16,10 +17,10 @@ Groupoff::Groupoff( Printer & prt, unsigned int numStudents, unsigned int maxTri
 {
     // Initialize array
     requests = new Work[numStudents];
-    
+
     // Initialize randomization
-    int seed = getpid(); 
-    mprng.set_seed(seed);
+    //int seed = getpid(); 
+    //mprng.set_seed(seed);
 }
 
 Groupoff::~Groupoff()
@@ -27,12 +28,12 @@ Groupoff::~Groupoff()
     delete [] requests;
 }
 
-int Groupoff::getRandomizedRequestedWorkIndex(int numStudentsLeft)
+unsigned int Groupoff::getRandomizedRequestedWorkIndex(int numStudentsLeft)
 {
-    int nthchoice = mprng(numStudentsLeft);
-    int index = 0; 
+    unsigned int nthchoice = mprng(numStudentsLeft);
+    unsigned int index = 0; 
 
-    int limit = nthchoice * numStudents + 1; 
+    unsigned int limit = nthchoice * numStudents + 1; 
 
     // We will take the nth requested piece of work
     while (true) 
@@ -58,17 +59,20 @@ int Groupoff::getRandomizedRequestedWorkIndex(int numStudentsLeft)
 
 void Groupoff::main()
 {
-    printer.print( Printer::Groupoff, 'S' );
+    prt.print( Printer::Groupoff, 'S' );
+
+    std::cout << "Groupoff main" << std::endl;
 
     // Groupoff task begins by accepting a call from each student to obtain a future giftcard 
     for (unsigned int i = 0; i < numStudents; i++)
     {
         _Accept( giftcard ) {} 
-        or _Accept( ~Groupoff ) // stop when destructor is called
-        {
-            printer.print( Printer::Groupoff , 'F');
-            return;
-        }
+        //or _Accept( ~Groupoff ) // stop when destructor is called
+        //{
+        //    prt.print( Printer::Groupoff , 'F');
+        //    return;
+        //}
+        std::cout << "Groupoff accept giftcard #" << i << std::endl;
     }
 
     // Periodically puts a real WATCard w value maxTripCost into a random future giftcard 
@@ -82,18 +86,24 @@ void Groupoff::main()
         }
         _Else // must not block on destructor call
         {
+            std::cout << "Groupoff main loop " << i << std::endl;
+
             // Before each giftcard is assigned, groupoff yields groupoffDelay times
             yield(groupoffDelay);
 
-            int selection = getRandomizedRequestedWorkIndex(numStudents - i);
+            unsigned int selection = getRandomizedRequestedWorkIndex(numStudents - i);
             assert(requests[selection].status != WorkStatus::Completed)
 
-            requests[selection].card = new WATCard();
-            requests[selection].card->deposit(maxTripCost);
+            WATCard * realWATCard = new WATCard(); 
+            realWATCard->deposit(maxTripCost);
+
+            requests[selection].card.delivery( realWATCard ); // Deliver watcard
             requests[selection].status = WorkStatus::Completed;
+
+            prt.print( Printer::Groupoff , 'D', maxTripCost);
         }
     }
-    printer.print( Printer::Groupoff , 'F');
+    prt.print( Printer::Groupoff , 'F');
     return;
 
 }
@@ -101,6 +111,8 @@ void Groupoff::main()
 // Called by clients
 WATCard::FWATCard Groupoff::giftCard()
 {   
+    std::cout << "giftcard()" << std::endl;
+
     requests[numRequests].status = WorkStatus::Requested; 
     numRequests++; 
     return requests[numRequests].card;

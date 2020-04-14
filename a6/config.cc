@@ -1,9 +1,12 @@
 #include "config.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 void processConfigFile( const char * configFile, ConfigParms & cparms )
 {
+    std::cout << "PROCESSING CONFIG FILE" << std::endl;
+
     // First, set defaults
     cparms.stopCost = 1;
     cparms.numStudents = 2; 
@@ -54,4 +57,18 @@ void processConfigFile( const char * configFile, ConfigParms & cparms )
         else if (variable == "ParentalDelay") cparms.parentalDelay = value;
         else if (variable == "NumCouriers") cparms.numCouriers = value;
     }
+
+    // DEBUGGING
+    std::cout << "StopCost " << cparms.stopCost << std::endl; 
+    std::cout << "NumStudents " << cparms.numStudents << std::endl; 
+    std::cout << "NumStops " << cparms.numStops << std::endl; 
+    std::cout << "MaxNumStudents " << cparms.maxNumStudents << std::endl; 
+    std::cout << "TimerDelay " << cparms.timerDelay << std::endl; 
+    std::cout << "MaxStudentDelay " << cparms.maxStudentDelay << std::endl; 
+    std::cout << "MaxStudentTrips " << cparms.maxStudentTrips << std::endl; 
+    std::cout << "GroupoffDelay " << cparms.groupoffDelay << std::endl; 
+    std::cout << "ConductorDelay " << cparms.conductorDelay << std::endl; 
+    std::cout << "ParentalDelay " << cparms.parentalDelay << std::endl; 
+    std::cout << "NumCouriers " << cparms.numCouriers << std::endl; 
+    // END OF DEBUGGING
 }

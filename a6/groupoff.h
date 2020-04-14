@@ -13,7 +13,7 @@ _Task Groupoff {
 	unsigned int maxTripCost;
 	unsigned int groupoffDelay;
 
-	unsigned int numRequests = 0;
+	unsigned int numRequests = 0; // Used to keep track of requests
 
 	enum WorkStatus { Unrequested, Requested, Completed };
 
@@ -28,7 +28,8 @@ _Task Groupoff {
 
 	Work* requests; // An array of size numStudents, **assuming each student requests once**
 
-	int getRandomizedRequestedWorkIndex(int numStudentsLeft);
+	unsigned int getRandomizedRequestedWorkIndex(int numStudentsLeft);
+	
 	void main();
   public:
 	Groupoff( Printer & prt, unsigned int numStudents, unsigned int maxTripCost, unsigned int groupoffDelay );

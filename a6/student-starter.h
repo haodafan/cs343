@@ -2,13 +2,6 @@
 #include "global.h"
 #include "train.h"
 
-#include "printer.h"
-#include "cardoffice.h"
-#include "train.h"
-#include "trainstop.h"
-#include "groupoff.h"
-#include "nameserver.h"
-
 _Task Student {
     class PImpl; // *** Replace these two lines with your own implementation.
     PImpl * pimpl;
