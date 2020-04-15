@@ -1,6 +1,7 @@
 #pragma once
 
 #include "watcard.h"
+#include "global.h"
 #include <list>
 
 _Monitor Printer;										// forward declarations

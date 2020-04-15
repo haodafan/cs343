@@ -1,4 +1,4 @@
-driver.o: driver.cc /usr/local/u++-7.0.0/inc/uC++.h \
+cardoffice.o: cardoffice.cc /usr/local/u++-7.0.0/inc/uC++.h \
  /usr/local/u++-7.0.0/inc/unwind-cxx.h /usr/local/u++-7.0.0/inc/unwind.h \
  /usr/local/u++-7.0.0/inc/assert.h /usr/local/u++-7.0.0/inc/uAlign.h \
  /usr/local/u++-7.0.0/inc/uStack.h /usr/local/u++-7.0.0/inc/uCollection.h \
@@ -9,8 +9,7 @@ driver.o: driver.cc /usr/local/u++-7.0.0/inc/uC++.h \
  /usr/local/u++-7.0.0/inc/uCalendar.h /usr/local/u++-7.0.0/inc/uAlarm.h \
  /usr/local/u++-7.0.0/inc/uPIHeap.h /usr/local/u++-7.0.0/inc/uHeap.h \
  /usr/local/u++-7.0.0/inc/uBaseSelector.h \
- /usr/local/u++-7.0.0/inc/uLocalDebugger.h MPRNG.h bank.h cardoffice.h \
- watcard.h /usr/local/u++-7.0.0/inc/uFuture.h \
- /usr/local/u++-7.0.0/inc/uDefaultExecutor.h global.h conductor.h \
- config.h groupoff.h printer.h nameserver.h parent.h student.h train.h \
- trainstop.h timer.h
+ /usr/local/u++-7.0.0/inc/uLocalDebugger.h cardoffice.h watcard.h \
+ /usr/local/u++-7.0.0/inc/uFuture.h \
+ /usr/local/u++-7.0.0/inc/uDefaultExecutor.h global.h bank.h printer.h \
+ MPRNG.h

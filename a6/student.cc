@@ -171,7 +171,7 @@ void Student::main()
                     //cout <<"Student " << id << " watcard insufficient funds " << endl; //DEBUGGING
                     // A request is made for the missing amount + initialization 
                     int missing = f.amount + pimpl->maxTripCost;
-                    pimpl->cardOffice.transfer( pimpl->id, missing, pimpl->watCard );
+                    pimpl->watCard = pimpl->cardOffice.transfer( pimpl->id, missing, pimpl->watCard );
                     goto AttemptPay; // Try again with the refilled WATCard
                 }
                 // Watcard is lost? 
