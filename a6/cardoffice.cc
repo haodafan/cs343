@@ -43,7 +43,6 @@ class WATCardOffice::PImpl
 
     _Task Courier { 
         unsigned int id;
-        Job* currentJob;
 
         Printer & prt;
         Bank & bank;
@@ -85,14 +84,6 @@ WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCourie
 }
 WATCardOffice::~WATCardOffice()
 {
-    // Destructor called, we need to wake all couriers and terminate them
-    while (!pimpl->jobs.empty()) pimpl->jobs.pop();
-    while (!pimpl->bench.empty()) pimpl->bench.signal();
-    for (unsigned int i = 0; i < pimpl->numCouriers; i++)
-    {
-        delete pimpl->couriers[i];
-    }
-
     // Destroy!
     delete pimpl;
 }
@@ -102,6 +93,7 @@ WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount )
     // Async call from student
     Job * job = new Job( sid , amount ); // create new work request
     pimpl->jobs.push(job); // add to list of requests
+    pimpl->prt.print( Printer::WATCardOffice, 'C' , sid , amount );
     return job->fwatCard; // return future in request
 }
 
@@ -109,6 +101,7 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 {
     Job * job = new Job( sid , amount , card ); // create new work request
     pimpl->jobs.push(job); // add to list of requests
+    pimpl->prt.print( Printer::WATCardOffice, 'T' , sid , amount );
     return job->fwatCard; // return future in request
 }
 
@@ -123,6 +116,7 @@ Job * WATCardOffice::requestWork()
 
     Job * currentJob = pimpl->jobs.front(); 
     pimpl->jobs.pop(); 
+    pimpl->prt.print( Printer::WATCardOffice, 'W' );
     return currentJob; 
 }
 
@@ -138,11 +132,23 @@ void WATCardOffice::main()
     while (true)
     {
         _Accept( ~WATCardOffice ) { break; }
-        or _Accept( transfer , create , requestWork )
+        or _Accept( transfer , create )
         {
             pimpl->bench.signalBlock(); // If transfer or create was called, signal a waiting courier
         }
+        or _Accept( requestWork )
+        {
+            yield();
+        }
         _Else {} 
+    }
+
+    // Destructor called, we need to wake all couriers and terminate them
+    while (!pimpl->jobs.empty()) pimpl->jobs.pop();
+    while (!pimpl->bench.empty()) pimpl->bench.signalBlock();
+    for (unsigned int i = 0; i < pimpl->numCouriers; i++)
+    {
+        delete pimpl->couriers[i];
     }
 
     pimpl->prt.print( Printer::WATCardOffice , 'F' );
@@ -154,7 +160,7 @@ void WATCardOffice::PImpl::Courier::main()
 
     while (true)
     {
-        currentJob = office.requestWork();
+        Job * currentJob = office.requestWork();
         if (currentJob) 
         {
             // 1 in 6 chance of courier losing watcard
@@ -195,6 +201,8 @@ void WATCardOffice::PImpl::Courier::main()
                 currentJob->fwatCard.delivery( newWatCard );
                 prt.print( Printer::WATCardOfficeCourier , id , 'T' , currentJob->studentId , currentJob->funds );
             }
+
+            delete currentJob;
         } // if (currentJob)
         else 
         {

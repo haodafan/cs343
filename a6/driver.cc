@@ -57,30 +57,30 @@ int main(int argc, char *argv[]) {
 
     // It then creates in order the:
     // printer, bank, WATCard office, groupoff, parent, name server, timer, train stops, trains, and students.
-    Printer * prt = new Printer( cparms.numStudents, numTrains, cparms.numStops, cparms.numCouriers ); 
-    Bank * bank = new Bank( cparms.numStudents ); 
-    WATCardOffice * cardOffice = new WATCardOffice( *prt, *bank, cparms.numCouriers );
-    Groupoff * groupoff = new Groupoff( *prt, cparms.numStudents, maxTripCost, cparms.groupoffDelay );
-    Parent * parent = new Parent( *prt, *bank, cparms.numStudents, cparms.parentalDelay, maxTripCost );
-    NameServer * nameServer = new NameServer( *prt, cparms.numStops, cparms.numStudents ); 
-    Timer * timer = new Timer( *prt, *nameServer, cparms.timerDelay ); 
+    Printer prt = Printer( cparms.numStudents, numTrains, cparms.numStops, cparms.numCouriers ); 
+    Bank bank = Bank( cparms.numStudents ); 
+    WATCardOffice cardOffice = WATCardOffice( prt, bank, cparms.numCouriers );
+    Groupoff groupoff = Groupoff( prt, cparms.numStudents, maxTripCost, cparms.groupoffDelay );
+    Parent parent = Parent( prt, bank, cparms.numStudents, cparms.parentalDelay, maxTripCost );
+    NameServer nameServer = NameServer( prt, cparms.numStops, cparms.numStudents ); 
+    Timer * timer = new Timer( prt, nameServer, cparms.timerDelay ); 
 
     TrainStop * trainStops[cparms.numStops]; 
     for (unsigned int i = 0; i < cparms.numStops; i++)
-        trainStops[i] = new TrainStop( *prt, *nameServer, i, cparms.stopCost );
+        trainStops[i] = new TrainStop( prt, nameServer, i, cparms.stopCost );
 
     Train * trains[numTrains]; 
     for (unsigned int i = 0; i < numTrains; i++)
-        trains[i] = new Train( *prt, *nameServer, i, cparms.numStudents, cparms.numStops );
+        trains[i] = new Train( prt, nameServer, i, cparms.numStudents, cparms.numStops );
 
     Conductor * conductors[numTrains];
     for (unsigned int i = 0; i < numTrains; i++)
-        conductors[i] = new Conductor( *prt, i, trains[i], cparms.conductorDelay );
+        conductors[i] = new Conductor( prt, i, trains[i], cparms.conductorDelay );
 
 
     Student * students[cparms.numStudents];
     for (unsigned int i = 0; i < cparms.numStudents; i++)
-        students[i] = new Student( *prt, *nameServer, *cardOffice, *groupoff, i, cparms.numStops, cparms.stopCost,
+        students[i] = new Student( prt, nameServer, cardOffice, groupoff, i, cparms.numStops, cparms.stopCost,
                                 cparms.maxStudentDelay, cparms.maxStudentTrips );
 
     // The entire simulation must shut down in an orderly fashion once all of the students have completed their trips
@@ -100,13 +100,6 @@ int main(int argc, char *argv[]) {
     
     for (unsigned int i = 0; i < cparms.numStops; i++)
         delete trainStops[i]; // Wait for trainstops to finish
-
-    delete nameServer; 
-    delete parent;
-    delete groupoff; 
-    delete cardOffice;
-    delete bank;
-    delete prt;
 
     return 0;
 }
